@@ -1,3 +1,4 @@
+import { IllegalArgumentException } from "../exceptions/IllegalArgumentException";
 import { IllegalStateException } from "../exceptions/IllegalStateException";
 import { RunTimeException } from "../exceptions/RunTimeException";
 import { TSJavaException } from "../exceptions/TSJavaException";
@@ -21,7 +22,7 @@ export class Optional<T> extends JavaObject {
         "you should not use this constructor directly, JavaScript demands for it to exist, but to properly mimic Java, please use `Optional.of(value)` or `Optional.ofNullable(value)` instead"
       );
     if (value === null && !internalArgs?.nullable) {
-      throw new RunTimeException(internalArgs?.mssg ? internalArgs.mssg : "Value cannot be null.");
+      throw new IllegalArgumentException(internalArgs?.mssg ? internalArgs.mssg : "Value cannot be null.");
     }
     this.#value = value;
   }
@@ -143,11 +144,11 @@ export class Optional<T> extends JavaObject {
 
   /**
    * Gets the value if not null, otherwise throws an error.
-   * @returns the value if present, throws  {@link Error} otherwise.
+   * @returns the value if present, throws  {@link IllegalStateException} otherwise.
    */
   public get(): T {
     if (this.#value === null) {
-      throw new RunTimeException("No value present");
+      throw new IllegalStateException("No value present");
     }
     return this.#value as T;
   }
