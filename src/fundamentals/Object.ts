@@ -64,7 +64,7 @@ export function boilerplateEqualityCheck<T extends JavaObject>({ obj1, obj2 }: {
   // The results can still be faked because #JavaScriptIsAnAcidTrip
   // Example:
   /*
-		  const Fake = {constructor: "JavaObject", hashCode: () => 12345};
+		  const Fake = {constructor:{ name: "JavaObject"}, hashCode: () => 12345};
 		  Object.setPrototypeOf(Fake, JavaObject.prototype);
 		 */
   if (typeof obj2 !== "object" || !obj2.constructor || !(obj2 instanceof JavaObject) || obj2.constructor.name !== obj1.constructor.name) {
