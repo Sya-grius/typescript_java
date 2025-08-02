@@ -1,6 +1,5 @@
 import { IllegalArgumentException } from "../exceptions/IllegalArgumentException";
 import { IllegalStateException } from "../exceptions/IllegalStateException";
-import { RunTimeException } from "../exceptions/RunTimeException";
 import { TSJavaException } from "../exceptions/TSJavaException";
 import { boilerplateEqualityCheck, JavaObject } from "./Object";
 
