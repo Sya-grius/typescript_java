@@ -1,3 +1,6 @@
+import { IllegalStateException } from "../exceptions/IllegalStateException";
+import { RunTimeException } from "../exceptions/RunTimeException";
+import { TSJavaException } from "../exceptions/TSJavaException";
 import { boilerplateEqualityCheck, JavaObject } from "./Object";
 
 export class Optional<T> extends JavaObject {
@@ -18,7 +21,7 @@ export class Optional<T> extends JavaObject {
         "you should not use this constructor directly, JavaScript demands for it to exist, but to properly mimic Java, please use `Optional.of(value)` or `Optional.ofNullable(value)` instead"
       );
     if (value === null && !internalArgs?.nullable) {
-      throw new Error(internalArgs?.mssg ? internalArgs.mssg : "Value cannot be null.");
+      throw new RunTimeException(internalArgs?.mssg ? internalArgs.mssg : "Value cannot be null.");
     }
     this.#value = value;
   }
@@ -80,9 +83,9 @@ export class Optional<T> extends JavaObject {
    * used to convert the internal optional value to a different type
    * @param mapper
    */
-  public map<U>(mapper: (value: T) => U): Optional<U> {
+  public map<U>(mapper: (value: T) => U): Optional<U | null> {
     if (this.#value === null) {
-      return Optional.ofNullable<U>(null);
+      return Optional.ofNullable(null);
     }
     return Optional.of(mapper(this.#value));
   }
@@ -92,9 +95,9 @@ export class Optional<T> extends JavaObject {
    * however, if it produces another Optional, it will flatten/unwrap it it.
    * @param mapper
    */
-  public flatMap<U>(mapper: (value: T) => Optional<U | Optional<U>>): Optional<U> {
+  public flatMap<U>(mapper: (value: T) => Optional<U | Optional<U>>): Optional<U | null> {
     if (this.#value === null) {
-      return Optional.ofNullable<U>(null);
+      return Optional.ofNullable(null);
     }
     const firstLayer = mapper(this.#value!);
     if (firstLayer && firstLayer instanceof Optional && firstLayer.get() instanceof Optional) {
@@ -144,7 +147,7 @@ export class Optional<T> extends JavaObject {
    */
   public get(): T {
     if (this.#value === null) {
-      throw new Error("No value present");
+      throw new RunTimeException("No value present");
     }
     return this.#value as T;
   }
@@ -180,13 +183,13 @@ export class Optional<T> extends JavaObject {
    * Exceptional for offensive programming.
    * @param errorSupplier a function that returns an error to throw if no value is present.
    */
-  public orElseThrow<E extends Error>(errorSupplier?: () => E): T {
+  public orElseThrow<E extends TSJavaException>(errorSupplier?: () => E): T {
     if (this.#value !== null) {
       return this.#value as T;
     } else if (errorSupplier) {
       throw errorSupplier();
     } else {
-      throw new Error("No value present");
+      throw new IllegalStateException("No value present");
     }
   }
 

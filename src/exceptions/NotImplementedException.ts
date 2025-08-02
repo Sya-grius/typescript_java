@@ -1,9 +1,9 @@
-import { TypeScriptJavaException } from "./TypeScriptJavaException";
+import { TSJavaException } from "./TSJavaException";
 
 /**
  * exception for when a method is not implemented in this package
  */
-export class NotImplementedException extends TypeScriptJavaException {
+export class NotImplementedException extends TSJavaException {
   constructor(message?: string, options?: ErrorOptions) {
     super(message, options);
     this.name = "NotImplementedException";
